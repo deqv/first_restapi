@@ -1,3 +1,5 @@
+import os
+
 from flask import Flask
 from flask_restful import Api
 from flask_jwt import JWT
@@ -11,14 +13,10 @@ from security import authenticate, identity
 # Below the app is created
 app = Flask(__name__)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///data.db')
 app.secret_key = 'superlongandsecurepassword'
 # Below the api is created and imported from flask_restful
 api = Api(app)
-
-@app.before_first_request
-def create_tables():
-    db.create_all()
 
 #JWT creates a new endpoint /auth, which intakes a username and password.
 # JWT then sends the username and password to the authenticate and identity functions
